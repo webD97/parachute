@@ -15,7 +15,6 @@ minetest.register_craftitem("parachute:parachute_item", {
 			pos.y = pos.y + 3
 			local ent = minetest.add_entity(pos, "parachute:parachute")
 			-- Copy watcher velocity to parachute
-			-- Disabled because user:getvelocity() isn't implemented, workaround needed
 			minetest.chat_send_all(player_getvelocity(user))
 			ent:setvelocity({x = 0, y = -player_getvelocity(user), z = 0})
 			-- Attach user
@@ -23,6 +22,9 @@ minetest.register_craftitem("parachute:parachute_item", {
 			-- Tell it who is attached
 			ent = ent:get_luaentity()
 			ent.attached = user:get_player_name()
+			-- Decrease itemstack
+			itemstack:take_item()
+			return itemstack
 		else
 			minetest.chat_send_player(user:get_player_name(), "Cannot open parachute on ground!")
 		end
@@ -52,3 +54,12 @@ function parachute:on_step(dtime)
 end
 
 minetest.register_entity("parachute:parachute", parachute)
+
+minetest.register_craft({
+	output = "parachute:parachute_item",
+	recipe = {
+		{"group:wool", "group:wool", "group:wool"},
+		{"farming:string", "", "farming:string"},
+		{"", "default:stick", ""}
+	}
+})
