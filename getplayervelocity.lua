@@ -1,5 +1,5 @@
 local player_pos = {}
-local player_speeds = {}
+local player_speeds_y = {}
 
 local timer = 0
 minetest.register_globalstep(function(dtime)
@@ -10,7 +10,7 @@ minetest.register_globalstep(function(dtime)
 			local name = p:get_player_name()
 			-- Calculate player's velocity if last position is known
 			if player_pos[name] ~= nil then
-				player_speeds[name] = vector.distance(player_pos[name], p:getpos()) / timer
+				player_speeds_y[name] = (player_pos[name].y -  p:getpos().y) / timer
 			else
 				print("Cannot calculate player speed on first server step.")
 			end
@@ -24,5 +24,5 @@ end)
 
 function player_getvelocity(player)
 	local name = player:get_player_name()
-	return player_speeds[name]
+	return player_speeds_y[name]
 end
