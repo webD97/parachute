@@ -2,6 +2,7 @@
 	Parachute for skydiving
 ]]
 dofile(minetest.get_modpath("parachute") .. "/physHelpers.lua")
+dofile(minetest.get_modpath("parachute") .. "/getplayervelocity.lua")
 
 minetest.register_craftitem("parachute:parachute_item", {
 	inventory_image = "parachute_inv.png",
@@ -15,7 +16,8 @@ minetest.register_craftitem("parachute:parachute_item", {
 			local ent = minetest.add_entity(pos, "parachute:parachute")
 			-- Copy watcher velocity to parachute
 			-- Disabled because user:getvelocity() isn't implemented, workaround needed
-			-- ent:setvelocity({x = 0, y = user:getvelocity().y, z = 0})
+			minetest.chat_send_all(player_getvelocity(user))
+			ent:setvelocity({x = 0, y = player_getvelocity(user), z = 0})
 			-- Attach user
 			user:set_attach(ent, "", {x=0,y=0,z=0}, {x=0,y=0,z=0})
 			-- Tell it who is attached
