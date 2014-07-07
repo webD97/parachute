@@ -17,7 +17,7 @@ minetest.register_craftitem("parachute:parachute_item", {
 			-- Copy watcher velocity to parachute
 			-- Disabled because user:getvelocity() isn't implemented, workaround needed
 			minetest.chat_send_all(player_getvelocity(user))
-			ent:setvelocity({x = 0, y = player_getvelocity(user), z = 0})
+			ent:setvelocity({x = 0, y = -player_getvelocity(user), z = 0})
 			-- Attach user
 			user:set_attach(ent, "", {x=0,y=0,z=0}, {x=0,y=0,z=0})
 			-- Tell it who is attached

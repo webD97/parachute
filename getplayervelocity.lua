@@ -1,23 +1,25 @@
 local player_pos = {}
 local player_speeds = {}
 
+local timer = 0
 minetest.register_globalstep(function(dtime)
-	player_speeds = {}
-	-- Update player positions
-	for _, p in ipairs(minetest.get_connected_players()) do
-		local name = p:get_player_name()
-		-- Calculate player's velocity if last position is known
-		if player_pos[name] ~= nil then
-			player_speeds[name] = vector.distance(player_pos[name], p:getpos()) / dtime
-			if player_speeds[name] ~= 0 then
-				minetest.chat_send_all(player_speeds[name])
+	if timer >= 0.25 then
+		player_speeds = {}
+		-- Update player positions
+		for _, p in ipairs(minetest.get_connected_players()) do
+			local name = p:get_player_name()
+			-- Calculate player's velocity if last position is known
+			if player_pos[name] ~= nil then
+				player_speeds[name] = vector.distance(player_pos[name], p:getpos()) / timer
+			else
+				print("Cannot calculate player speed on first server step.")
 			end
-		else
-			print("Cannot calculate player speed on first server step.")
+			-- Set new pos
+			player_pos[name] = p:getpos()
 		end
-		-- Set new pos
-		player_pos[name] = p:getpos()
+		timer = 0
 	end
+	timer = timer + dtime
 end)
 
 function player_getvelocity(player)
