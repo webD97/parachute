@@ -12,13 +12,9 @@ minetest.register_craftitem("parachute:parachute_item", {
 			-- Spawn parachute
 			pos.y = pos.y + 3
 			local ent = minetest.add_entity(pos, "parachute:parachute")
-			-- Spawn speed watcher
-			pos.y = pos.y + 1
-			local watcher = minetest.add_entity(pos, "parachute:watcher")
-			-- Attach speed watcher
-			watcher:set_attach(user, "", {x=0,y=0,z=0}, {x=0,y=0,z=0})
 			-- Copy watcher velocity to parachute
-			ent:setvelocity({x = 0, y = watcher:getvelocity().y, z = 0})
+			-- Disabled because user:getvelocity() isn't implemented, workaround needed
+			-- ent:setvelocity({x = 0, y = user:getvelocity().y, z = 0})
 			-- Attach user
 			user:set_attach(ent, "", {x=0,y=0,z=0}, {x=0,y=0,z=0})
 			-- Tell it who is attached
@@ -39,16 +35,10 @@ local parachute = {
 	},
 	attached = nil
 }
-local watcher = {
-	initial_properties = {
-		visual = "wielditem",
-		collisionbox = {0,0,0,0,0,0},
-	}
-}
 
 function parachute:on_step(dtime)
 	if self.attached ~= nil then
-		self.object:setacceleration({x = 0, y = g(self.object:getvelocity().y), z = 0})
+		self.object:setacceleration({x = 0, y = a(self.object:getvelocity().y), z = 0})
 	end
 	local pos = self.object:getpos()
 	local under = minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z})
@@ -58,9 +48,4 @@ function parachute:on_step(dtime)
 	end
 end
 
-function watcher:on_step(dtime)
-	minetest.chat_send_all(minetest.serialize(self.object:getvelocity()))
-end
-
 minetest.register_entity("parachute:parachute", parachute)
-minetest.register_entity("parachute:watcher", watcher)
