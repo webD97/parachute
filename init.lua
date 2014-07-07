@@ -4,7 +4,8 @@
 dofile(minetest.get_modpath("parachute") .. "/physHelpers.lua")
 
 minetest.register_craftitem("parachute:parachute_item", {
-	inventory_image = "default_brick.png",
+	inventory_image = "parachute_inv.png",
+	wield_image = "parachute_inv.png",
 	on_use = function(itemstack, user, pointed_thing)
 		local pos = user:getpos()
 		local on = minetest.get_node({x = pos.x, y = pos.y - 1, z = pos.z})
